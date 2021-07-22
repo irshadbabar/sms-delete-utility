@@ -13,16 +13,16 @@
 
 const SMSData = [];
 
-for (let index = 1; index < (5 + Math.random()*100); index++) {
-    SMSData.push({
-        id: index,
-        date: "",
-        read: "",
-        status: "",
-        body: "Hello Message",
-        seen: "",
-        address: "+923407072712",
-      });
+for (let index = 1; index < (5 + Math.random() * 100); index++) {
+  SMSData.push({
+    id: index,
+    date: "",
+    read: "",
+    status: "",
+    body: "Hello Message",
+    seen: "",
+    address: "+923407072712",
+  });
 }
 
 export default SMSData;

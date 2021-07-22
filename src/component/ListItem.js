@@ -84,10 +84,8 @@ export default class ListItem extends Component {
     }
   };
 
-  onClick = (item) => {
-
-    
-    console.log('Hello You Clicked me ' + item.id);
+  onClick = (item) => {    
+    //console.log('Hello You Clicked me ' + item.id);
     //Alert.alert('Hello You Clicked me ' + item.id);
     this.props.navigation.navigate('MessageDetails', {
       item: item
@@ -96,48 +94,40 @@ export default class ListItem extends Component {
 
   render() {
     return (
-      <TouchableHighlight
-        onPress={() => this.onClick(this.props.item)}
-        underlayColor="white">
-        <View style={{display: this.state.hideItem ? 'none' : 'flex'}}>
-          <View style={styles.absolute}>
-            <Text style={[styles.textBold, {marginHorizontal: 10}]}>
-              {' '}
-              Delete
-            </Text>
-            <Text style={[styles.textBold, {marginHorizontal: 10}]}>
-              {' '}
-              Delete
-            </Text>
-          </View>
-          <Animated.View
-            ref="task"
-            style={styles.item}
-            {...this.PanResponder.panHandlers}>
-            <View style={styles.itemContactMessage}>
-              <Text style={styles.textContact}>
-                {this.props.item.address.length < 25
-                  ? this.props.item.address
-                  : this.props.item.address.substring(0, 25) + ' ...'}
-              </Text>
-              <Text style={styles.textMessage}>
-                {this.props.item.body.toString().length < 30
-                  ? this.props.item.body
-                  : this.props.item.body.substring(0, 29) + ' ...'}
-              </Text>
-            </View>
-
-            <View style={styles.itemDateTime}>
-              <Text style={styles.textDate}>
-                {getDateFormat(this.props.item.date)}
-              </Text>
-              <Text style={styles.textTime}>
-                {getTimeAMPMFormat(this.props.item.date)}
-              </Text>
-            </View>
-          </Animated.View>
+      <View style={{display: this.state.hideItem ? 'none' : 'flex'}}>
+        <View style={styles.absolute}>
+          <Text style={[styles.textBold, {marginHorizontal: 10}]}> Delete</Text>
+          <Text style={[styles.textBold, {marginHorizontal: 10}]}> Delete</Text>
         </View>
-      </TouchableHighlight>
+        <Animated.View ref="task" {...this.PanResponder.panHandlers}>
+          <TouchableHighlight
+            onPress={() => this.onClick(this.props.item)} 
+            underlayColor="white">
+            <View style={styles.item}>
+              <View style={styles.itemContactMessage}>
+                <Text style={styles.textContact}>
+                  {this.props.item.address.length < 25
+                    ? this.props.item.address
+                    : this.props.item.address.substring(0, 25) + ' ...'}
+                </Text>
+                <Text style={styles.textMessage}>
+                  {this.props.item.body.toString().length < 30
+                    ? this.props.item.body
+                    : this.props.item.body.substring(0, 29) + ' ...'}
+                </Text>
+              </View>
+              <View style={styles.itemDateTime}>
+                <Text style={styles.textDate}>
+                  {getDateFormat(this.props.item.date)}
+                </Text>
+                <Text style={styles.textTime}>
+                  {getTimeAMPMFormat(this.props.item.date)}
+                </Text>
+              </View>
+            </View>
+          </TouchableHighlight>
+        </Animated.View>
+      </View>
     );
   }
 }

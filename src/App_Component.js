@@ -124,9 +124,7 @@ _onSmsListenerPressed = async () => {
 
     await requestContactsPermission();
     await requestSmsPermission();
-
   }
-
   setFloatVisibility = (visibility) => {
     this.setState({ floatVisibility: visibility });
   }
@@ -135,8 +133,15 @@ _onSmsListenerPressed = async () => {
 
     this.setState({ smsData: DataList, resetStates: false });
   };
-  onClickSearch = async () => {
+
+  onClick = () => {
+
     showToast('Started searching...',Toast.durations.SHORT, Toast.positions.TOP, 0);
+    this.onClickSearch();
+  }
+
+  onClickSearch = async () => {
+    //showToast('Started searching...',Toast.durations.SHORT, Toast.positions.TOP, 0);
 
     if (Boolean(this.state.text)) {
       if (await checkReadSmsPermission()) {
@@ -210,9 +215,7 @@ _onSmsListenerPressed = async () => {
       }
       else
       {
-        
         defaultSmsPermissionAlert(this.deleteAll);
-
       }
     }
   }
@@ -244,11 +247,11 @@ _onSmsListenerPressed = async () => {
                 onChangeText={(searchedText) => this.onChangeText(searchedText)}
                 placeholder="Search messages to delete"
                 style={{ fontSize: 18 }}
-                onSubmitEditing={this.onClickSearch}
+                onSubmitEditing={this.onClick}
 
               />
               <Icon
-                onPress={() => this.onClickSearch()}
+                onPress={this.onClick}
                 name="ios-search-outline"
                 style={{ fontSize: 28 }}
               />
@@ -293,6 +296,54 @@ const styles = StyleSheet.create({
     borderColor: '#009688',
     backgroundColor: '#FFFFFF',
   },
+  rightArrow: {
+    position: "absolute",
+    //backgroundColor: "#0078fe",
+    backgroundColor: "#dedede",
+    //backgroundColor:"red",
+    width: 20,
+    height: 25,
+    bottom: 0,
+    borderBottomLeftRadius: 25,
+    right: -10
+  },
+  
+  rightArrowOverlap: {
+    position: "absolute",
+    backgroundColor: "#eeeeee",
+    //backgroundColor:"green",
+    width: 20,
+    height: 35,
+    bottom: -6,
+    borderBottomLeftRadius: 18,
+    right: -20
+  
+  },
+  
+  /*Arrow head for recevied messages*/
+  leftArrow: {
+      position: "absolute",
+      backgroundColor: "#dedede",
+      //backgroundColor:"red",
+      width: 20,
+      height: 25,
+      bottom: 0,
+      borderBottomRightRadius: 25,
+      left: -10
+  },
+  
+  leftArrowOverlap: {
+      position: "absolute",
+      backgroundColor: "#eeeeee",
+      //backgroundColor:"green",
+      width: 20,
+      height: 35,
+      bottom: -6,
+      borderBottomRightRadius: 18,
+      left: -20
+  
+  },
+
 });
 
 const Stack = createStackNavigator();
@@ -300,28 +351,39 @@ function MessageDetails({ route, navigation }) {
    /* 2. Get the param */
    const { item } = route.params;
    return (
-     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-       {/* <Text>Details Screen</Text> */}
-       <Text>item: {JSON.stringify(item.body)}</Text>
-       {/* <Text>otherParam: {JSON.stringify(otherParam)}</Text> */}
-       {/* <Button
-         title="Go to Details... again"
-         onPress={() =>
-           navigation.push('Details', {
-             itemId: Math.floor(Math.random() * 100),
-           })
-         } 
-       /> */}
-       {/* <Button title="Go to Home" onPress={() => navigation.navigate('Home')} /> */}
-       {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
-     </View>
+    <View style={{
+      //backgroundColor: "#0078fe",
+      backgroundColor: "#dedede",
+      padding:10,
+      marginLeft: '10%',
+      borderRadius: 5,
+      //marginBottom: 15,
+      marginTop: 15,
+      marginRight: "10%",
+      maxWidth: '80%',
+      alignSelf: 'center',
+      //maxWidth: 500,
+      
+      borderRadius: 20,
+    }} key={item.id}>
+
+      
+      <Text style={{ fontSize: 16, color: "#000", }} key={item.id}>{item.body}</Text>
+
+        <View style={styles.rightArrow}></View>
+        
+        <View style={styles.rightArrowOverlap}></View>
+      
+      
+      
+</View>
    );
 }
 
 function Screen() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Default" screenOptions={{ title: 'Main Screen' }}>
+      <Stack.Navigator initialRouteName="Default" screenOptions={{ title: 'Message Details' }}>
         <Stack.Screen name="Default" component={App} options ={{headerShown:false}} />
         <Stack.Screen name="MessageDetails" component={MessageDetails} />
       </Stack.Navigator>

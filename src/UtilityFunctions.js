@@ -44,7 +44,7 @@ export const getTimeAMPMFormat = (jsonDateTime) => {
   return hours + ':' + minutes + ' ' + ampm;
 };
 
-export const showToast = (message, duration=Toast.durations.SHORT, position=Toast.positions.BOTTOM, delay=500) => {
+export const showToast = (message, duration=Toast.durations.SHORT, position=Toast.positions.BOTTOM, delay=0) => {
   // Add a Toast on screen.
   Toast.show(message, {
     duration: duration,
