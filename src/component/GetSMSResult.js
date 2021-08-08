@@ -19,9 +19,9 @@ const  getSMS = (searchedText,callback) => {
 
     //minDate: 1554636310165, // timestamp (in milliseconds since UNIX epoch)
     //maxDate: 1556277910456, // timestamp (in milliseconds since UNIX epoch)
-    bodyRegex: '(.*'+ searchedText+'.*)', // content regex to match
-    //bodyRegex: '(?i:.*StRing.*)', // regix ignoring case
-    //bodyRegex: '(?i:.*'+ searchedText+'.*)', // content regex to match
+    bodyRegex: '((?i)(?s).*'+ searchedText+'.*)', // ignore case and multi-line match
+    //bodyRegex: '((?s).*'+ searchedText+'.*)', // match multi-lines
+    //bodyRegex: '((?i).*'+ searchedText+'.*)', // ignore case
     // the next 5 filters should NOT be used together, they are OR-ed so pick one
     //read: 0, // 0 for unread SMS, 1 for SMS already read, 0 considered for default case
     //_id: 1234, // specify the msg id
