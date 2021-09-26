@@ -2,10 +2,11 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { TextInput, StyleSheet, View,Alert,AppState,Text,Button} from 'react-native';
+import { TextInput, StyleSheet, View,Alert,AppState,Text,Button,Dimensions} from 'react-native';
 
 import { RootSiblingParent } from 'react-native-root-siblings';
 import List from './component/FlatList';
+import FilterDetails from './component/screens/FilterDetails';
 import FAB from './component/FAB';
 import {
   requestSmsPermission,
@@ -28,6 +29,8 @@ import SmsRetriever from 'react-native-sms-retriever';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import DefaultPreference from 'react-native-default-preference';
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
@@ -49,9 +52,66 @@ class App extends React.Component {
       this.onNotif.bind(this),
     );
     this.requestRequirePermissions();
+    //DefaultPreference.clearAll();
+    this.setDefaultPreferences();
 
   }
 
+  setDefaultPreferences = ()=>{
+    
+    const keys = new Array('isCaseSensitiveEnabled','searchCriteria','startDate','endDate');
+    DefaultPreference.getMultiple(keys).then(function(values){
+      console.log("values.length : ",values.length)
+      
+      const notEmptyItems = values.filter((item)=>{
+        if(item !== null && typeof(item) !== 'undefined'){
+         return true; 
+        }
+      });
+
+
+      console.log("notEmptyItems length = "+notEmptyItems.length +" " + notEmptyItems);
+      if(notEmptyItems.length == 4){
+        console.log("all values are set");
+      }
+      else if(notEmptyItems.length == 0){
+
+        const defaultValues = {
+          isCaseSensitiveEnabled: ""+false,
+          searchCriteria:'',
+          startDate: new Date("1971-01-01").toDateString(),
+          endDate: new Date().toDateString(),
+        }
+
+        DefaultPreference.setMultiple(defaultValues).then(function(){
+          console.log("default values are set");
+        })
+      }
+      else{
+        if(!values[0]){
+          DefaultPreference.set('isCaseSensitiveEnabled',""+false).then(function(){
+            console.log("default value is set for Case")
+          })
+        }
+        if(!values[1]){
+          DefaultPreference.set('searchCriteria','').then(function(){
+            console.log("default value is set for searchCriteria")
+          })
+        }
+        if(!values[2]){
+          DefaultPreference.set('startDate',new Date("1971-01-01").toDateString()).then(function(){
+            console.log("default value is set for start Date");
+          })
+        }
+        if(!values[3]){
+          DefaultPreference.set('endDate',new Date().toDateString()).then(function(){
+            console.log("default value is set for End Date")
+          })
+        }
+
+      }
+      })
+    }
 // Get the SMS message (second gif)
 _onSmsListenerPressed = async () => {
   try {
@@ -136,13 +196,20 @@ _onSmsListenerPressed = async () => {
 
   onClick = () => {
 
-    showToast('Started searching...',Toast.durations.SHORT, Toast.positions.TOP, 0);
+    if (Boolean(this.state.text)) {
+      showToast('Started searching...',Toast.durations.SHORT, Toast.positions.TOP, 0);
+    }
     this.onClickSearch();
   }
 
-  onClickSearch = async () => {
-    //showToast('Started searching...',Toast.durations.SHORT, Toast.positions.TOP, 0);
+  onClickFilter = () => {
+    this.props.navigation.navigate('FilterDetails', {
+      item: "Irshad"
+    });
+  }
 
+  onClickSearch = async () => {
+    
     if (Boolean(this.state.text)) {
       if (await checkReadSmsPermission()) {
         console.log("Here I am " + this.state.text)
@@ -229,14 +296,19 @@ _onSmsListenerPressed = async () => {
             style={{
               height: 80,
               backgroundColor: '#c45653',
-              justifyContent: 'center',
+              //backgroundColor: '#0992ed',
+              justifyContent: 'space-between',
               paddingHorizontal: 5,
+              paddingVertical:15,
+              flexDirection:'row',
+              alignItems: 'center',
             }}>
             <View
               style={{
                 height: 50,
+                width: Dimensions.get('window').width*.90,
                 backgroundColor: 'white',
-                borderRadius: 10,
+                borderRadius: 15,
                 paddingHorizontal: 10,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -248,7 +320,6 @@ _onSmsListenerPressed = async () => {
                 placeholder="Search messages to delete"
                 style={{ fontSize: 18 }}
                 onSubmitEditing={this.onClick}
-
               />
               <Icon
                 onPress={this.onClick}
@@ -256,6 +327,12 @@ _onSmsListenerPressed = async () => {
                 style={{ fontSize: 28 }}
               />
             </View>
+            <Icon
+                onPress={this.onClickFilter}
+                name="ios-filter"
+                style={{ fontSize: 28, color:'white' }}
+              />
+
           </View>
 
           <List NotificationService={this.NotificationService} data={this.state.smsData} setFloatVisibility={this.setFloatVisibility} resetStates={this.state.resetStates} navigation={this.props.navigation} />
@@ -380,12 +457,16 @@ function MessageDetails({ route, navigation }) {
    );
 }
 
+
+
+
 function Screen() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Default" screenOptions={{ title: 'Message Details' }}>
+      <Stack.Navigator initialRouteName="Default" screenOptions={{}}>
         <Stack.Screen name="Default" component={App} options ={{headerShown:false}} />
-        <Stack.Screen name="MessageDetails" component={MessageDetails} />
+        <Stack.Screen name="MessageDetails" options = {{ title: 'Message Details' }} component={MessageDetails} />
+        <Stack.Screen name="FilterDetails"  options = {{ title: 'Filter Options' }} component={FilterDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

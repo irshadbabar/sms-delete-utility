@@ -1,13 +1,45 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable space-infix-ops */
 import SmsAndroid from 'react-native-get-sms-android';
 
+import DefaultPreference from 'react-native-default-preference';
 //import SMSData from './Data';
 
 let SMSData = [];
+let gSearchedText;
+let callBack;
 
-const  getSMS = (searchedText,callback) => {
+const setDefaultsValues = (values) =>{
+  searchSMS(setFilter(values));
+}
+
+const setFilter = (values) =>{
+  
+  let caseSensitiveEnabled = true;
+  let searchCriteria = '';
+  let startDate = new Date("1970-01-01").toString();
+  let endDate = new Date().toString()
+
+  if(values && values.length>0){
+    caseSensitiveEnabled = (values[0] === 'true'); // string to bool conversion
+    searchCriteria = values[1];
+    startDate = values[2];
+    endDate = values[3];
+  }
+  
+  let defaultRegex = '((?i)(?s).*'+ gSearchedText+'.*)';
+  if(caseSensitiveEnabled){
+    defaultRegex = '((?s).*'+ gSearchedText+'.*)';
+    console.log("case is enabled ");
+  }
+
+  console.log("startDate", startDate);
+  console.log("endDate", endDate);
+
   
   let filter = {
-    box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
+    box: searchCriteria,
+    //box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
     /**
      *  the next 3 filters can work together, they are AND-ed
      *
@@ -19,7 +51,9 @@ const  getSMS = (searchedText,callback) => {
 
     //minDate: 1554636310165, // timestamp (in milliseconds since UNIX epoch)
     //maxDate: 1556277910456, // timestamp (in milliseconds since UNIX epoch)
-    bodyRegex: '((?i)(?s).*'+ searchedText+'.*)', // ignore case and multi-line match
+    minDate: Date.parse(startDate),
+    maxDate:Date.parse(endDate),
+    bodyRegex: defaultRegex, // ignore case and multi-line match
     //bodyRegex: '((?s).*'+ searchedText+'.*)', // match multi-lines
     //bodyRegex: '((?i).*'+ searchedText+'.*)', // ignore case
     // the next 5 filters should NOT be used together, they are OR-ed so pick one
@@ -32,6 +66,12 @@ const  getSMS = (searchedText,callback) => {
     indexFrom: 0, // start from index 0
     maxCount: 1000, // count of SMS to return each time
   };
+
+  return filter;
+}
+
+
+const searchSMS = (filter)=>{
   SmsAndroid.list(
     JSON.stringify(filter),
     (fail) => {
@@ -43,12 +83,6 @@ const  getSMS = (searchedText,callback) => {
       var arr = JSON.parse(smsList);
       SMSData =[];
       arr.forEach(function (object) {
-        //console.log('Object: ' + object);
-        //console.log('-->' + object.date);
-        //console.log('-->' + object.body);
-        //console.log('-->' + object.address);
-
-
         SMSData.push({
           id: object._id,
           date: object.date,
@@ -58,20 +92,19 @@ const  getSMS = (searchedText,callback) => {
           seen: object.seen,
           address: object.address,
         });
-        //console.log(SMSData)
-        //alert(SMSData.length)
-        //alert('your message with selected id is --->' + object.body);
       });
-      //console.log("callback executed");
-      callback(SMSData);
-      //alert(SMSData.length.toString());
-      //return SMSData;
-      //alert('your message with selected id is --->' + Date.now().toString());
+      callBack(SMSData);
     },
   );
-  //alert(SMSData.length.toString());
-  //console.log("getSMS executed");
-  //return SMSData;
+}
+const  getSMS = (searchedText,callback) => {
+
+  gSearchedText = searchedText;
+  callBack = callback;
+
+  const keys = new Array('isCaseSensitiveEnabled','searchCriteria','startDate','endDate');
+
+  DefaultPreference.getMultiple(keys).then(setDefaultsValues);
 };
 
 export default getSMS;

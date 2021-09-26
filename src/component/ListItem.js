@@ -85,8 +85,6 @@ export default class ListItem extends Component {
   };
 
   onClick = (item) => {    
-    //console.log('Hello You Clicked me ' + item.id);
-    //Alert.alert('Hello You Clicked me ' + item.id);
     this.props.navigation.navigate('MessageDetails', {
       item: item
     });
