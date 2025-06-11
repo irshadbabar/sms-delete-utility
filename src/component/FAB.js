@@ -17,20 +17,20 @@ const Fab = (props) => {
             floatingIcon={require('../../icons/icons8-trash-64.png')}
 
             onPressItem={name => {
-                console.log(`selected button: ${name}`);
+                //console.log(`selected button: ${name}`);
                 if(name==actions[1].name){
-                    console.log(`selected button: ${name}`);
+                    //console.log(`selected button: ${name}`);
                     props.clearAll();
                 }
                 if(name==actions[0].name){
-                    console.log(`selected button: ${name}`);
+                    //console.log(`selected button: ${name}`);
                     props.deleteAll();
                 }
                 
             }
             }
             onPressMain={name => {
-                console.log(`selected button: ${name}`);
+                //console.log(`selected button: ${name}`);
             }
             }
 

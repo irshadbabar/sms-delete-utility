@@ -31,9 +31,9 @@ export const requestCameraPermission = async () => {
       // },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can use the camera');
+      //console.log('You can use the camera');
     } else {
-      console.log('Camera permission denied');
+      //console.log('Camera permission denied');
     }
   } catch (err) {
     console.warn(err);
@@ -53,9 +53,9 @@ export const requestSmsPermission = async () => {
       // },
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can use sms');
+      //console.log('You can use sms');
     } else {
-      console.log('sms permission denied');
+      //console.log('sms permission denied');
     }
   } catch (err) {
     console.warn(err);
@@ -75,11 +75,11 @@ export const requestContactsPermission = async () => {
         // },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use contacts');
+        //console.log('You can use contacts');
       } else {
-        console.log('contacts permission denied');
+        //console.log('contacts permission denied');
       }
     } catch (err) {
-      console.warn(err);
+      //console.warn(err);
     }
   };

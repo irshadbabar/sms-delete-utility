@@ -29,7 +29,7 @@ export default class LoginView extends Component {
       isCaseSensitiveEnabled: false,
       searchCriteria:'',
       startDate:new Date("1973-01-01"),
-      endDate:new Date(),
+      endDate:new Date(new Date().setDate(new Date().getDate() + 1)),
     }
     const keys = new Array('isCaseSensitiveEnabled','searchCriteria','startDate','endDate');
     DefaultPreference.getMultiple(keys).then(this.setDefaults);
@@ -37,37 +37,37 @@ export default class LoginView extends Component {
   setSearchCriteria = (value) => {
     this.setState({searchCriteria:value})
     DefaultPreference.set('searchCriteria',value).then(function() {
-      console.log('search criteria is set');
+      //console.log('search criteria is set');
       })
   }
 
   toggleSwitch = () => {
     this.setState({isCaseSensitiveEnabled : !this.state.isCaseSensitiveEnabled});
     DefaultPreference.set('isCaseSensitiveEnabled', "" + !this.state.isCaseSensitiveEnabled).then(function() {
-    console.log('case is set');
+    //console.log('case is set');
     })
   }
 
   setStartDate = (date) =>{
     DefaultPreference.set('startDate',date).then(function() {
-      console.log('start date is set');
+      //console.log('start date is set');
       });
     this.setState({startDate:date});
   }
 
   setEndDate = (date) =>{
     DefaultPreference.set('endDate',date).then(function() {
-      console.log('end date is set');
+      //console.log('end date is set');
       });
     this.setState({endDate:date});
   }
   setDefaults = (values) =>{
 
-    console.log("values.length = "+values.length);
+    //console.log("values.length = "+values.length);
 
     if(values && values.length == 4){
 
-      console.log("values = "+values);
+      //console.log("values = "+values);
       this.setState(
         {
           isCaseSensitiveEnabled : (values[0] === 'true'),
@@ -83,8 +83,8 @@ export default class LoginView extends Component {
       {
         isCaseSensitiveEnabled: false,
         searchCriteria:'',
-        startDate:new Date("1970-01-01"),
-        endDate:new Date(),
+        startDate:new Date("1971-01-01"),
+        endDate:new Date(new Date().setDate(new Date().getDate() + 1)),
       });
   }
   resetPreferences = () =>{
@@ -92,8 +92,8 @@ export default class LoginView extends Component {
     const defaultValues = {
       isCaseSensitiveEnabled: ""+false,
       searchCriteria:'',
-      startDate: Date("1970-01-01").toString(),
-      endDate: Date().toString(),
+      startDate: new Date("1971-01-01").toString(),
+      endDate: new Date(new Date().setDate(new Date().getDate() + 1)).toString(),
     }
     DefaultPreference.setMultiple(defaultValues).then(function(){
       console.log("Reset to defaults is done");
@@ -145,7 +145,7 @@ export default class LoginView extends Component {
         mode="date"
         placeholder="select date"
         format="MMM D, YYYY"
-        minDate="1971-01-01"
+        minDate="1970-01-01"
         //maxDate="2016-06-01"
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
@@ -169,7 +169,7 @@ export default class LoginView extends Component {
       <DatePicker
         style={styles.date}
         date={this.state.endDate}
-        mode="date"
+        mode="date" 
         placeholder="select date"
         format="MMM D, YYYY"
         minDate="1970-01-01"

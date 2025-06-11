@@ -12,16 +12,16 @@ class SendSMSContainer extends Component {
 
   // Function to send message
   sendSMS = () => {
-    console.log('sendSMS');
+    //console.log('sendSMS');
     // alert('clicked');
     SmsAndroid.autoSend(
       '+923046455665', //phoneNumber
       'Hello Brother how are you', //message
       (fail) => {
-        console.log('Failed with this error: ' + fail);
+        //console.log('Failed with this error: ' + fail);
       },
       (success) => {
-        console.log('SMS sent successfully');
+        //console.log('SMS sent successfully');
       },
     );
   };
@@ -56,17 +56,17 @@ class SendSMSContainer extends Component {
     SmsAndroid.list(
       JSON.stringify(filter),
       (fail) => {
-        console.log('Failed with this error: ' + fail);
+        //console.log('Failed with this error: ' + fail);
       },
       (count, smsList) => {
-        console.log('Count: ', count);
-        console.log('List: ', smsList);
+        //console.log('Count: ', count);
+        //console.log('List: ', smsList);
         var arr = JSON.parse(smsList);
 
         arr.forEach(function (object) {
-          console.log('Object: ' + object);
-          console.log('-->' + object.date);
-          console.log('-->' + object.body);
+          //console.log('Object: ' + object);
+          //console.log('-->' + object.date);
+          //console.log('-->' + object.body);
           //alert('your message with selected id is --->' + object.body);
         });
         //alert('your message with selected id is --->' + Date.now().toString());
@@ -76,14 +76,14 @@ class SendSMSContainer extends Component {
 
   // Function to delete particular message from inbox with id
   deleteSMS = () => {
-    console.log('deleteSMS');
+    //console.log('deleteSMS');
     SmsAndroid.delete(
       30582,
       (fail) => {
-        console.log('Failed with this error: ' + fail);
+        //console.log('Failed with this error: ' + fail);
       },
       (success) => {
-        console.log('SMS deleted successfully');
+        //console.log('SMS deleted successfully');
       },
     );
   };

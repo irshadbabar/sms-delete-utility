@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sms"
+        applicationId "com.searchanddelete"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

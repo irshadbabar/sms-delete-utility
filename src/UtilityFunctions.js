@@ -143,7 +143,7 @@ export const defaultSmsPermissionAlert = (successHandler, ...argument) =>{
       { text: "OK", onPress: async() => {
         const response  = await DefaultSmsPermissionModule.askForDefaultSmsPermission();
         if(response.toUpperCase() === "YES"){
-          console.log('Yes Response');
+          //console.log('Yes Response');
           if(argument[0]){
             successHandler(argument[0]);
           }else{
@@ -152,7 +152,7 @@ export const defaultSmsPermissionAlert = (successHandler, ...argument) =>{
           
         }
         else if(response.toUpperCase() === "NO"){
-          console.log('No Response');
+          //console.log('No Response');
         }
       } }
     ],

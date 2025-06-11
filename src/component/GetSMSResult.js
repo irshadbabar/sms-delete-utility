@@ -17,8 +17,8 @@ const setFilter = (values) =>{
   
   let caseSensitiveEnabled = true;
   let searchCriteria = '';
-  let startDate = new Date("1970-01-01").toString();
-  let endDate = new Date().toString()
+  let startDate = new Date("1971-01-01").toString();
+  let endDate  = new Date(new Date().setDate(new Date().getDate() + 1)).toString();
 
   if(values && values.length>0){
     caseSensitiveEnabled = (values[0] === 'true'); // string to bool conversion
@@ -30,11 +30,11 @@ const setFilter = (values) =>{
   let defaultRegex = '((?i)(?s).*'+ gSearchedText+'.*)';
   if(caseSensitiveEnabled){
     defaultRegex = '((?s).*'+ gSearchedText+'.*)';
-    console.log("case is enabled ");
+    //console.log("case is enabled ");
   }
 
-  console.log("startDate", startDate);
-  console.log("endDate", endDate);
+  //console.log("startDate", startDate);
+  //console.log("endDate", endDate);
 
   
   let filter = {
@@ -75,10 +75,10 @@ const searchSMS = (filter)=>{
   SmsAndroid.list(
     JSON.stringify(filter),
     (fail) => {
-      console.log('Failed with this error: ' + fail);
+      //console.log('Failed with this error: ' + fail);
     },
     (count, smsList) => {
-      console.log('Count: ', count);
+      //console.log('Count: ', count);
       //console.log('List: ', smsList);
       var arr = JSON.parse(smsList);
       SMSData =[];

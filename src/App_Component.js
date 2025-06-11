@@ -61,7 +61,7 @@ class App extends React.Component {
     
     const keys = new Array('isCaseSensitiveEnabled','searchCriteria','startDate','endDate');
     DefaultPreference.getMultiple(keys).then(function(values){
-      console.log("values.length : ",values.length)
+      //console.log("values.length : ",values.length)
       
       const notEmptyItems = values.filter((item)=>{
         if(item !== null && typeof(item) !== 'undefined'){
@@ -70,9 +70,9 @@ class App extends React.Component {
       });
 
 
-      console.log("notEmptyItems length = "+notEmptyItems.length +" " + notEmptyItems);
+      //console.log("notEmptyItems length = "+notEmptyItems.length +" " + notEmptyItems);
       if(notEmptyItems.length == 4){
-        console.log("all values are set");
+        //console.log("all values are set");
       }
       else if(notEmptyItems.length == 0){
 
@@ -80,32 +80,32 @@ class App extends React.Component {
           isCaseSensitiveEnabled: ""+false,
           searchCriteria:'',
           startDate: new Date("1971-01-01").toDateString(),
-          endDate: new Date().toDateString(),
+          endDate: new Date(new Date().setDate(new Date().getDate() + 1)).toDateString(),
         }
 
         DefaultPreference.setMultiple(defaultValues).then(function(){
-          console.log("default values are set");
+          //console.log("default values are set");
         })
       }
       else{
         if(!values[0]){
           DefaultPreference.set('isCaseSensitiveEnabled',""+false).then(function(){
-            console.log("default value is set for Case")
+            //console.log("default value is set for Case")
           })
         }
         if(!values[1]){
           DefaultPreference.set('searchCriteria','').then(function(){
-            console.log("default value is set for searchCriteria")
+            //console.log("default value is set for searchCriteria")
           })
         }
         if(!values[2]){
           DefaultPreference.set('startDate',new Date("1971-01-01").toDateString()).then(function(){
-            console.log("default value is set for start Date");
+            //console.log("default value is set for start Date");
           })
         }
         if(!values[3]){
-          DefaultPreference.set('endDate',new Date().toDateString()).then(function(){
-            console.log("default value is set for End Date")
+          DefaultPreference.set('endDate',new Date(new Date().setDate(new Date().getDate() + 1)).toDateString()).then(function(){
+            //console.log("default value is set for End Date")
           })
         }
 
@@ -118,12 +118,12 @@ _onSmsListenerPressed = async () => {
     const registered = await SmsRetriever.startSmsRetriever();
     if (registered) {
       SmsRetriever.addSmsListener(event => {
-        console.log(event.message);
+        //console.log(event.message);
         SmsRetriever.removeSmsListener();
       }); 
     }
   } catch (error) {
-    console.log(JSON.stringify(error));
+    //console.log(JSON.stringify(error));
   }
 };
 
@@ -131,7 +131,7 @@ _onSmsListenerPressed = async () => {
     return new Promise((resolve) =>
       setTimeout(
         () => { resolve('result') },
-        3000
+        100
       )
     );
   }
@@ -139,46 +139,56 @@ _onSmsListenerPressed = async () => {
   backgroundDeleteService = async (taskDataArguments) => {
     // Example of an infinite loop task
     
-    
     const { array } = taskDataArguments;
  
       if(BackgroundService.isRunning()){
-          
+        //Alert.alert("Background service is running");  
         //we are starting from one because we have deleted first one already
+        //console.log("we are starting from one because we have deleted first one already")
         for(let i = 1;i<array.length;i++){
           //this.NotificationService.showDeleteAllProgressNotification(5,i);
           await deleteSMS(array[i].id);
 
           await this.updateProgress(array.length,i);
          
-          const data = await this.performTimeConsumingTask();
-          console.log("data + i "+ data+"   "+i );
-          console.log("App state :"+AppState.currentState);
-          
+          //const data = await this.performTimeConsumingTask();
+          console.log("i  =  "+i );
+          //console.log("App state :"+AppState.currentState);  
         }
-        this.NotificationService.showDeleteAllProgressNotification(5,"All Messages Deleted");
         
-        await BackgroundService.stop();
+        const deleteMessageDetails =  "\n"+ array.length + " Messages deleted successfully";
+
+        this.NotificationService.showDeleteAllProgressNotification("Delete Update",deleteMessageDetails);
+        
+        //await BackgroundService.stop();
+      }else{
+        //Alert.alert("Background service is not running");
+        //console.log("Background service is not working");
       }
   };
   
   
   updateProgress =  async (total, current) => {
-    if (current && total) {
-      const percentageCompletion = (current / total) * 100;
-  
-      if (percentageCompletion === total) {
-        
-      } else {
-       const progress = Math.round(percentageCompletion);
-       
-        if(AppState.currentState === "active"){
-          await BackgroundService.updateNotification({progressBar:{max:100,value:progress}}); // Only Android, iOS will ignore this call
-          await BackgroundService.updateNotification({taskDesc: 'Deleting All Messages '+progress+ "%"}); // Only Android, iOS will ignore this call
+
+    return new Promise(async (resolve) => {
+      if (current && total) {
+        const percentageCompletion = (current / total) * 100;
+    
+        if (percentageCompletion === total) {
+          
+        } else {
+         const progress = Math.round(percentageCompletion);
+         
+          if(AppState.currentState === "active"){
+            await BackgroundService.updateNotification({progressBar:{max:100,value:progress},taskDesc: 'Deleting All Messages '+ progress + "%"}); // Only Android, iOS will ignore this call
+            resolve(true);
+          }
+         
         }
-       
       }
-    }
+    });
+
+
   }
   requestRequirePermissions = async () => {
 
@@ -212,7 +222,7 @@ _onSmsListenerPressed = async () => {
     
     if (Boolean(this.state.text)) {
       if (await checkReadSmsPermission()) {
-        console.log("Here I am " + this.state.text)
+        //console.log("Here I am " + this.state.text)
         getSMS(this.state.text, this.callback);
       } else {
         await requestSmsPermission();
@@ -248,6 +258,9 @@ _onSmsListenerPressed = async () => {
     if(this.state.smsData.length){
       //first will try to delete first message if successfull then will delete all the messages
       const status = await deleteSMS(this.state.smsData[0].id)
+      //const status = true;
+      //Alert.alert("First Delete Sms Status " + status);
+      console.log("First Delete Sms Status " + status);
       if(status){
 
         const arr = [...this.state.smsData];
@@ -256,7 +269,7 @@ _onSmsListenerPressed = async () => {
           taskTitle: 'Delete',
           taskDesc: 'Deleting All Messages',
           taskIcon: {
-              name: 'ic_launcher',
+              name: 'sms_icon',
               type: 'mipmap',
           },
           //color: '#ff00ff',
@@ -273,12 +286,14 @@ _onSmsListenerPressed = async () => {
 
       };
 
+      console.log('starting the service');
+      //Alert.alert('starting the service');
       await BackgroundService.start(this.backgroundDeleteService, options);
 
      
       this.clearAll();
       //showToast('All deleted successfully ');
-      console.log('All deleted successfully ');
+      //console.log('All deleted successfully ');
       }
       else
       {

@@ -27,18 +27,18 @@ export default class List1 extends Component {
     return new Promise((resolve) => {
       Contacts.checkPermission((error, result) => {
         if (error) {
-          console.log('Error happended ' + error);
+          //console.log('Error happended ' + error);
           resolve(contactName);
         } else if (result === 'denied') {
-          console.log('denied permission contact read');
+          //console.log('denied permission contact read');
           resolve(contactName);
         } else if (result === 'undefined') {
-          console.log('undefied permission contact read');
+          //console.log('undefied permission contact read');
           resolve(contactName);
         } else if (result === 'authorized') {
           Contacts.getContactsByPhoneNumber(contactName, (err, contacts) => {
             if (err) {
-              console.log(err);
+              //console.log(err);
               resolve(contactName);
             } else if (contacts.length) {
               contactName = contacts[0].givenName;
@@ -98,7 +98,7 @@ export default class List1 extends Component {
   showSwipeLeftRightMessage(numberOfRecord) {
     if (numberOfRecord) {
       showToast('delete message using swipe left or right', Toast.durations.LONG, Toast.positions.BOTTOM, 2000);
-      console.log("toast called")
+      //console.log("toast called")
     }
   }
 
@@ -154,17 +154,17 @@ export default class List1 extends Component {
     //console.log("Calling componentDidUpdate");
     if (oldProps.data.length !== this.props.data.length) {
       this.updateStatesOnPropsChange();
-      console.log('List Got By Length Check');
+      //console.log('List Got By Length Check');
 
     } else if (oldProps.data !== this.props.data) {
       this.updateStatesOnPropsChange();
-      console.log('List Got By Array Check');
+      //console.log('List Got By Array Check');
     }
 
   }
   handleDeleteTask = async (itemId) => {
     const result = await deleteSMS(itemId);
-    console.log(result);
+    //console.log(result);
     if (result) {
       const newData = this.state.data.filter((item) => itemId !== item.id);
       this.setState({ data: newData });
